@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="spring_bank">
+    账号:<input type="text" name="accountId" v-model="accountId"><br>
+    转入账号:<input type="text" name="inAccountId" v-model="inAccountId"><br>
+    操作金额:<input type="text" name="money" v-model="money"><br>
+    <button @click="open()">开户</button>
+    <button @click="deposite()">存入</button>
+    <button @click="withdraw()">取出</button>
+    <button @click="transfer()">转账</button>
+    <button @click="showBalance()">查询</button>
+    <ul style="list-style: none">
+        <li>{{results.code}}</li>
+        <li>{{results.data}}</li>
+        <li>{{results.msg}}</li>
+        <li>{{money}}</li>
+    </ul>
+</div>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/axios.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: '#spring_bank',
+        data: {
+            inAccountId: '',
+            accountId: '',
+            money: '',
+            results: []
+        },
+        methods: {
+            open: function () {
+                axios.get("/mybank/openAccounts", {params:{money: this.money}}).then((result) => {
+                    this.results = result.data;
+
+
+                });
+            },
+            deposite: function () {
+                axios.get("/mybank/deposite", {params:{accountId:this.accountId,money: this.money}}).then((result) => {
+                    this.results = result.data;
+
+
+                });
+            },
+            withdraw: function () {
+                axios.get("/mybank/withdraw", {params:{accountId:this.accountId,money: this.money}}).then((result) => {
+                    this.results = result.data;
+
+
+                });
+            },
+            transfer: function () {
+                axios.get("/mybank/transfer", {params:{accountId:this.accountId,inAccountId:this.inAccountId,money: this.money}}).then((result) => {
+                    this.results = result.data;
+                });
+            },
+            showBalance:function(){
+                alert(this.accountId);
+                axios.get("/mybank/showBalance", {params:{accountId: this.accountId}}).then((result) => {
+                    this.results = result.data;
+                });
+            }
+        }
+
+    });
+
+</script>
+</body>
+</html>
